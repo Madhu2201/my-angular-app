@@ -1,0 +1,758 @@
+/*
+ * Consolidated CSS from previous HTML (hello-world-html) and additional styles
+ * for comparison-document.component.html
+ *
+ * Colors and fonts in this file are meticulously chosen to match the
+ * "Screenshot (434).jpg" image provided by the user.
+ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Reset and Base Styles */
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+    padding: -20px 40px;
+}
+body {
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+  background-color: #f4f7f6; /* Light grey background from screenshot */
+  color: #333; /* Default text color */
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Ensure body takes full viewport height */
+}
+.document-tab-buttons {
+  display: flex;
+  gap: 8px;
+  color: #123151;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 5px;
+  flex-wrap: wrap; /* Allow tabs to wrap on smaller screens */
+  flex-shrink: 0; /* Prevent tabs from shrinking */
+}
+
+.doc-tab-btn {
+  // background: #017BFF; /* Solid blue background for inactive tabs (from screenshot) */
+  color: #123151;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 8px 16px;
+  font-size: 15px;
+  font-weight: 600;
+  // color: #FFFFFF; /* White text for inactive tabs (from screenshot) */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 6px 6px 0 0;
+  // flex-grow: 1; /* Distribute tabs evenly */
+  text-align: center;
+
+  &:hover {
+    // background-color: #0056b3; /* Darker blue on hover */
+    color: #FFFFFF;
+  }
+
+  &.active-tab {
+    border-bottom: 3px solid #017BFF; /* Blue underline for active tab (from screenshot) */
+    color: #017BFF; /* Blue text for active tab (from screenshot) */
+    background-color: #fff; /* White background for active tab (from screenshot) */
+  }
+}
+
+/* Main Container for the entire component */
+.main-container {
+  max-width: 1500px; /* Limit the width */
+  margin: 20px auto;  /* Center it horizontally */
+  padding: 10px;      /* Inner space */
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+}
+/* Adjust margin utility */
+.adjust-margin {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/* Right Section (main content wrapper) */
+.right-section {
+  border: 2px solid #cecece;
+  padding: 10px;
+    margin: 0 auto;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  flex-grow: 1; /* Allow it to grow within main-container */
+  display: flex;
+  flex-direction: column; /* Added to make children stack vertically and allow flex-grow */
+  max-width: 1400px; /* Set a maximum width for centering */
+  width: 95%; /* Use a percentage width for responsiveness */
+}
+
+/* Header Name (e.g., flowName - currently hidden in HTML) */
+.headername {
+  background-color: #98c1e3;
+  font-size: 17px;
+  color: #000;
+  font-weight: 600;
+  padding: .5%;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  flex-shrink: 0; /* Prevent header from shrinking */
+}
+
+/* BGV Document Header Wrapper */
+.bgvDoc-main-wrapper {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  border-bottom: 1px solid #e0e0e0;
+  // margin-bottom: 20px;
+  flex-shrink: 0; /* Prevent it from shrinking */
+}
+
+/* BGV Document Left Section (Title and Main Action Buttons) */
+.bgv-doc-left-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border-right: 1px solid #e0e0e0;
+  padding-right: 1.5rem;
+  flex-shrink: 0;
+}
+
+/* BGV Title with Eye Icon */
+.BGVtitle {
+  font-size: 14px;
+  color: #686868;
+  font-weight: bold;
+  padding-left: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.BGVtitle > .icon-link {
+  font-size: 20px;
+  padding-right: 0;
+  color: #007bff; /* Link color for icon */
+}
+.BGVtitle > .icon-link:hover {
+  color: #0056b3; /* Hover color for icon */
+}
+
+/* Main Action Buttons (Approve/Reject Candidate) */
+.main-action-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.processButton-m {
+  border-radius: 7px;
+  color: white;
+  background: #4CAF50; /* Solid vibrant green from screenshot */
+  font-size: 14px;
+  height: 50px;
+  width: 150px;
+  margin: 5px;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.processButton-m:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+  background: #45a049; /* Slightly darker green on hover */
+}
+
+.processButtonRed-m {
+  border-radius: 7px;
+  color: white;
+  background: #D32F2F; /* Solid red from screenshot */
+  font-size: 14px;
+  height: 50px;
+  width: 150px;
+  margin: 5px;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.processButtonRed-m:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+  background: #C62828; /* Slightly darker red on hover */
+}
+
+/* BGV Document Right Section (Status Modules, DMS, Scope) */
+.bgv-doc-right-section {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  flex-shrink: 0; /* Important: prevent this section from shrinking */
+}
+
+/* Scrollable Queue (Status Modules) */
+.queuescroll {
+  display: flex;
+  width: auto;
+  overflow-y: hidden; /* Only horizontal scroll for this row of items */
+  overflow-x: auto;
+  flex-grow: 1;
+  align-items: flex-start;
+  padding-bottom: 10px;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #888 #f1f1f1; /* Firefox */
+  flex-shrink: 0; /* Important: prevent this from shrinking */
+}
+.queuescroll::-webkit-scrollbar {
+  height: 5px;
+}
+.queuescroll::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+.queuescroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Individual Status Block */
+.status-block {
+  flex-shrink: 0;
+  padding: 0 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.status-block:first-child {
+  padding-left: 0;
+}
+
+/* Status Header text */
+.statusheader {
+  margin-bottom: 0px;
+  font-weight: 800;
+  font-size: 13px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Container for status circles */
+.status-counts {
+  display: flex;
+  gap: 0px;
+  margin-bottom: 0px;
+}
+
+/* Individual Status Circle */
+.circle {
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  line-height: 1;
+  font-weight: bolder;
+  font-size: 8px;
+  margin: 2px;
+}
+.circle.green { background-color: #8BC34A; border-color: #8BC34A; } /* Muted green from screenshot */
+.circle.yellow { background-color: #FFC107; border-color: #FFC107; } /* Strong yellow/orange from screenshot */
+.circle.red { background-color: #F44336; border-color: #F44336; } /* Standard red from screenshot */
+
+/* Component Level Action Buttons */
+.component-action-buttons {
+  display: flex;
+  gap: 2px;
+  margin-top: 5px;
+}
+
+.componentLevelbtn {
+  height: 25px;
+  width: 25px;
+  border: 1px solid #017BFF; /* Blue border */
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #017BFF; /* Default icon color */
+  background-color: transparent;
+}
+.componentLevelbtn:hover {
+  background-color: #e0e0e0;
+}
+.componentLevelbtn.btnGreen {
+  background-color: #8BC34A; /* Matching status green */
+  border-color: #8BC34A;
+  color: #fff;
+}
+.componentLevelbtn.btnRed {
+  background-color: #F44336; /* Matching status red */
+  border-color: #F44336;
+  color: #fff;
+}
+.componentLevelbtn .icon-link {
+  color: inherit;
+}
+
+/* DMS and Scope Group */
+.dms-and-scope-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding-left: 1.5rem;
+  border-left: 1px solid #e0e0e0;
+  flex-shrink: 0;
+}
+
+.dmsCount {
+  background-color: #673ab7; /* Purple from screenshot */
+  border-color: #673ab7;
+  color: #fff;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  padding: 0;
+  line-height: normal;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.scope {
+  color: #673ab7; /* Purple from screenshot */
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.purpleCircleForScope {
+  background-color: #673ab7; /* Purple from screenshot */
+  border-color: #673ab7;
+  color: #fff;
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  padding: 0;
+  line-height: normal;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 9px;
+  cursor: pointer;
+}
+
+/* Tabs styling (for ngx-bootstrap tabset) */
+.tabset-container {
+  margin-top: 20px;
+  flex-grow: 1; /* Allow tabset to grow */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Styles for ngx-bootstrap tabs to match the screenshot */
+/* These `:host ::ng-deep` rules are generally for Angular's View Encapsulation
+   and won't apply directly in a plain HTML file's <style> block.
+   However, since the request is to provide SCSS for a .scss file,
+   keeping them for an Angular context. They would be replaced with direct
+   class selectors if this SCSS was directly pasted into the HTML <style>. */
+:host ::ng-deep .tabsetClass ul.nav-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  border-bottom: none; /* Remove default border-bottom */
+  margin-bottom: 0; /* Remove margin-bottom */
+  padding-left: 0;
+  list-style: none;
+}
+
+:host ::ng-deep .tabsetClass ul.nav-tabs .nav-item {
+  margin-bottom: 0;
+  flex: 1; /* Distribute tabs evenly */
+  text-align: center; /* Center tab text */
+}
+
+:host ::ng-deep .tabsetClass ul.nav-tabs .nav-link {
+  display: block;
+  padding: 10px 15px;
+  border: none; /* Remove borders */
+  border-radius: 0; /* Remove border-radius */
+  text-decoration: none;
+  color: #fff; /* White text for all tabs */
+  background-color: #0481E6; /* Blue background for all tabs */
+  transition: background-color 0.3s ease, border-bottom 0.3s ease;
+  cursor: pointer;
+  font-weight: 600; /* Bold text for tabs */
+  font-size: 17px; /* Larger font size as per screenshot */
+  border-right: 1px solid rgba(255, 255, 255, 0.2); /* Separator */
+}
+
+:host ::ng-deep .tabsetClass ul.nav-tabs .nav-link:last-child {
+  border-right: none; /* No separator for the last tab */
+}
+
+:host ::ng-deep .tabsetClass ul.nav-tabs .nav-link:hover:not(.active) {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+:host ::ng-deep .tabsetClass ul.nav-tabs .nav-link.active {
+  background-color: #fff; /* White background for active tab */
+  color: #0481E6; /* Blue text for active tab */
+  border-bottom: 3px solid #0481E6; /* Blue underline for active tab */
+  font-weight: bolder; /* Bolder text for active tab */
+}
+
+/* Tab Content Area: This will expand to fill remaining space, and its internal content will scroll if needed */
+.tab-content-area {
+  flex-grow: 1; /* Allow tab content area to grow */
+  display: flex;
+  flex-direction: column; /* Organize children vertically */
+  padding: 15px; /* Ensure content is not directly against the edges */
+}
+
+/* This targets the content inside each specific tab (e.g., the div with *ngIf) */
+/* Assuming a direct div child of .col-lg-12 that contains the main content of the selected tab */
+.tab-content-area > .row.put-top.tab-content-wrapper > .col-lg-12 > div {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Ensure this div takes full height of its parent (col-lg-12) */
+}
+
+
+.tab-content-wrapper { /* This wraps the dynamic tables inside tab-content-area */
+  flex-grow: 1; /* Make it take available height within tab-content-area */
+  display: flex;
+  flex-direction: column;
+}
+
+.tab-content-wrapper > .col-lg-12 { /* This is the inner container before tables */
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Headers inside tab content should not shrink */
+.tab-content-area h3,
+.tab-content-area h4 {
+  flex-shrink: 0;
+}
+
+/* Table styling */
+.tableScrollOnly {
+  width: 100%;
+  overflow-x: auto; /* Allow horizontal scrolling for wide tables */
+  overflow-y: auto; /* Allow vertical scrolling for long tables */
+  flex-grow: 1; /* Allow the table container to grow within its parent */
+}
+.table {
+  width: 100%;
+  min-width: 900px; // Adjust based on your column count
+  border-collapse: collapse;
+  border:1px solid gray;
+}
+.table-design th {
+  padding: 18px 25px;
+  text-align: left;
+  white-space: nowrap;
+  background-color: #355b82; /* Dark blue-gray for table headers from screenshot */
+  color: #fff;
+  font-size: 30px; /* Changed from 14px to 15px */
+  font-weight: 700;
+  height: 3rem;
+}
+
+.table-design tbody tr td {
+  text-align: center;
+  vertical-align: middle;
+    height: 4rem;
+    width: auto;
+}
+
+.tableData {
+  vertical-align: middle;
+  padding: 12px 20px;
+  border: 1px solid #e0e0e0;
+  font-size: 30px;
+}
+
+.table > tbody > tr:nth-child(odd) { /* Apply light blue to odd rows for striping (from screenshot) */
+  background-color: #E0F2F7;
+}
+.table > tbody > tr:nth-child(even) { /* Keep white background for even rows (from screenshot) */
+  background-color: #FFFFFF;
+}
+
+.tablecellbold {
+  font-weight: bolder;
+  align-content: center;
+  font-size: 15px;
+}
+
+.documentLevelbtn-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.documentLevelbtn {
+  height: 40px;
+  width: 40px;
+  border: 1px solid #0481E6;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.documentLevelbtn:hover {
+  background-color: #e0e0e0;
+}
+.documentLevelbtn.btnGreen {
+  background-color: #94ab2c;
+  border-color: #94ab2c;
+  color: #fff;
+}
+.documentLevelbtn.btnRed {
+  background-color: #cf2727;
+  border-color: #cf2727;
+  color: #fff;
+}
+.whiteColor{
+  color: #fff !important;
+}
+.disabled-wrapper {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none; /* Disables click events */
+}
+.disabled-link {
+  pointer-events: none; /* Disables click events on the link inside */
+  cursor: not-allowed;
+}
+.comparefield{
+  background-color: #cfeafa ;
+}
+
+/* Modal styling (for ng-template #DocumentView) */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid #e9ecef;
+}
+.modal-title {
+  margin-bottom: 0;
+  line-height: 1.5;
+  font-size: 1.25rem;
+}
+.modal-body {
+  position: relative;
+  flex: 1 1 auto;
+  padding: 15px;
+}
+.modal-body .imgsize {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.alignError {
+  text-align: center;
+  color: red;
+  font-weight: bold;
+  padding: 20px;
+}
+
+/* Other general styles from previous HTML */
+.cardFocus{
+  cursor: pointer;
+}
+.paddingright4{
+  padding-right: 4%;
+}
+.margintop1{
+  margin-top: 1%;
+}
+.divWidth3{
+    width: 99%;
+}
+.headernameStatus{
+  background-color: #0481E6;
+  font-size: 17px;
+    color: #fff;
+    font-weight: 600;
+    padding: 1.5%;
+    border-radius: 10px;
+}
+.fontWhite{
+  color: #fff !important;
+}
+.paddingLeft5{
+  padding-left: 5px !important;
+}
+.boxSize{
+  width: 100%;
+}
+.alignbox{
+  padding: 10px 40px;
+}
+.boxborder{
+  border-radius: 0px;
+}
+.boxwarning{
+  color:red;
+}
+.note{
+  color:#333;
+  font-weight: bold;
+  font-size: 14px;
+}
+.sortq{
+  display: -webkit-inline-box;
+  color: gray;
+  margin-left: 8px;
+}
+.popuphead{
+    font-size: 20px;
+    text-align: center;
+    margin-top: 20px;
+  }
+.popuptext{
+    font-size: 16px;
+    text-align: center;
+    margin-top: 10px;
+  }
+.btnmargin{
+    margin-top: 20px;
+    padding: 6px 45px;
+    font-size: 17px;
+  }
+.popupYes{
+    margin-left: 25%;
+    background: #337ab7;
+  }
+.popupNo{
+    margin-left: 10%;
+    background: #b30000;
+  }
+.popheader{
+    margin-top: 70px;
+  }
+.table > tbody > tr {
+    border-radius: 4px;
+    font-weight: normal;
+    box-shadow: 0px 2px 16px 0px rgba(153, 155, 168, 0.12), 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+   }
+
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+   font-size: 12px;
+}
+
+.table-action-header {
+     width: 120px;
+     text-align: center;
+     padding-top: 8px;
+     padding-bottom: 8px;
+ }
+
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > tbody > tr > td,
+.table > tfoot > tr > td{
+    padding: 10px 15px;
+ }
+
+.table > thead > tr > th,
+.table > thead > tr > td {
+    padding: 2px 15px;
+ }
+
+
+.imgsize{
+  height: 100%;
+  width: 100%;
+}
+/* Responsive adjustments */
+@media (max-width: 767px) {
+  .bgvDoc-main-wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .bgv-doc-left-section {
+    flex-direction: column;
+    align-items: flex-start;
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+    padding-right: 0;
+    padding-bottom: 10px;
+    width: 100%;
+  }
+  .bgv-doc-right-section {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 0;
+    border-left: none;
+    width: 100%;
+  }
+  .main-action-buttons {
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+  }
+  .processButton-m, .processButtonRed-m {
+    width: 100%;
+    margin: 5px 0;
+  }
+  .queuescroll {
+    width: 100%;
+  }
+  .dms-and-scope-group {
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+    border-left: none;
+  }
+  .status-block {
+    padding: 0 5px;
+  }
+
+  .doc-tab-btn {
+    padding: 8px 10px; /* Smaller padding for mobile tabs */
+    font-size: 0.9em;
+  }
+}
