@@ -7,7 +7,290 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-comparison-document',
   standalone: true,
   imports: [FormsModule, CommonModule], // TabsModule removed
- templateUrl:'./comparison-document.component.html',
+ template:`
+  <div class="main-container">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 adjust-margin right-section" *ngIf="flagstatusHeader">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 adjust-margin headername" style="display: none;">
+                    {{flowName}}
+                </div>
+                <!-- Main container for BGV Document, Approve/Reject, and Statuses -->
+                <div class="bgvDoc-main-wrapper">
+                    <div class="bgv-doc-left-section">
+                        <p class="BGVtitle">
+                            <a (click)="displayPreview(DocumentView, BGVData._id, BGVData,'modal-xl')" class="icon-link">
+                                <i class="icon fa fa-eye" aria-hidden="true" tooltip="View"></i>
+                            </a>
+                            BGV Document
+                        </p>
+                        <div class="main-action-buttons">
+                            <button class="processButton-m" (click)="updateDocument('mainCollection','Reconciliation_Approved',BGVData,true)">Approve Candidate</button>
+                            <button class="processButtonRed-m" (click)="openPopup($event, null,updateDocument,['mainCollection','Reject',BGVData,true])">Reject Candidate</button>
+                        </div>
+                    </div>
+
+                    <div class="bgv-doc-right-section">
+                        <div class="queuescroll">
+                            <div class="status-block" *ngFor="let headS of statusHeader; let colIndex = index;">
+                                <span class="statusheader" *ngIf="headS=='Proof_Of_Identication/Address_Documents'">POI AND POA</span>
+                                <span class="statusheader" *ngIf="headS=='Bank_Statement_Documents'">Bank Statement</span>
+                                <span class="statusheader" *ngIf="headS=='Employment_Documents'">Employment</span>
+                                <span class="statusheader" *ngIf="headS=='Education_Documents'">Education</span>
+                                <span class="statusheader" *ngIf="headS=='Supervisor_Documents'">Supervisor</span>
+                                <span class="statusheader" *ngIf="headS=='Reference_Documents'">Referee </span>
+
+                                <div class="status-counts">
+                                    <div class="circle green" tooltip="Approve"><span class="statuscount">{{statusData.status[colIndex] ? statusData.status[colIndex][headS][0].Approve : 0}}</span></div>
+                                    <div class="circle yellow" tooltip="Pending"><span class="statuscount">{{statusData.status[colIndex] ? statusData.status[colIndex][headS][0].Pending : 0}}</span></div>
+                                    <div class="circle red" tooltip="Reject"><span class="statuscount">{{statusData.status[colIndex] ? statusData.status[colIndex][headS][0].Reject : 0}}</span></div>
+                                </div>
+
+                                <div class="component-action-buttons">
+                                    <div class="componentLevelbtn" [ngClass]="compoentStatus[headS]=='Reconciliation_Approved' ? 'btnGreen paddingLeft5' : 'paddingLeft5'"
+                                        (click)="updatecomponentDocument(headS,'Reconciliation_Approved',BGVData)">
+                                        <a class="icon-link">
+                                            <i class="icon fa fa-check" aria-hidden="true" tooltip="Approve"></i>
+                                        </a>
+                                    </div>
+                                    <div class="componentLevelbtn" [ngClass]="compoentStatus[headS]=='Reject' ? 'btnRed' : ''">
+                                        <a (click)="openPopup($event, null,updatecomponentDocument,[headS,'Reject',BGVData])" class="icon-link">
+                                            <i class="icon fa fa-times" aria-hidden="true" tooltip="Reject"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="dms-and-scope-group">
+                            <div class="dmsCount" (mouseover)="showTable()" (mouseout)="hideTable()">
+                                <span class="statuscount">{{dmsDocList.length}}</span>
+                            </div>
+                            <div class="scope-container" *ngIf="!verification_flow" style="display:flex; align-items:center; gap:5px;">
+                                <span class="scope">Scope</span>
+                                <div class="purpleCircleForScope" (mouseover)="isValidScopeObjVisible=!isValidScopeObjVisible" (mouseout)="isValidScopeObjVisible=!isValidScopeObjVisible">
+                                    <span class="statuscount">1</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabs (Buttons) for document types -->
+                <div class="document-tab-buttons">
+                  <button *ngFor="let tabName of documentCategories; let i = index"
+                          class="doc-tab-btn"
+                          [ngClass]="{'active-tab': selectedTabIndexP === i}"
+                          (click)="selectTabVTS(i)">
+                    {{ tabName }}
+                  </button>
+                </div>
+
+                <!-- Content Area for Tabs -->
+                <div class="tab-content-area">
+                    <div class="row put-top tab-content-wrapper">
+                        <div class="col-lg-12">
+                            <!-- Placeholder for empty state -->
+                            <p class="text-center text-gray-500" [hidden]="selectedCategory && (documentTableData.length > 0 || currentEmploymentDocs.length > 0 || previousEmploymentDocs.length > 0)">
+                                Select a document type tab to view its data in a table.
+                            </p>
+
+                            <ng-container *ngFor="let tabName of documentCategories; let i = index">
+                                <div *ngIf="selectedTabIndexP === i">
+                                    <!-- Conditional rendering for "Employment" tab (multiple tables + matching %) -->
+                                    <ng-container *ngIf="tabName === 'Employment'">
+                                        <!-- Current Employment Details Table -->
+                                        <ng-container *ngIf="currentEmploymentDocs && currentEmploymentDocs.length > 0">
+                                            <h3 class="sub-table-header">Current Employment Details</h3>
+                                            <div class="tableScrollOnly">
+                                                <table class="table table-striped table-bordered nowrap data-table">
+                                                    <thead class="table-design">
+                                                        <tr>
+                                                            <th></th> <!-- For BGV/Document/Matching % labels + icons -->
+                                                            <th>TB Details</th>
+                                                            <th *ngFor="let key of getRelevantKeys(currentEmploymentDocs[0])">
+                                                                {{ formatKey(key) }}
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <ng-container *ngFor="let doc of currentEmploymentDocs">
+                                                            <!-- BGV Data Row -->
+                                                            <tr>
+                                                                <td class="tableData tablecellbold">
+                                                                    <i class="fa fa-check-circle text-green-500 mr-2"></i> BGV
+                                                                </td>
+                                                                <td class="tableData">N/A</td> <!-- TB Details -->
+                                                                <td class="tableData" *ngFor="let key of getRelevantKeys(doc)">
+                                                                    {{ getBGVValueForField(doc, key) }}
+                                                                </td>
+                                                            </tr>
+                                                            <!-- Document Data Row -->
+                                                            <tr>
+                                                                <td class="tableData tablecellbold">
+                                                                    <i class="fa fa-file-alt text-blue-500 mr-2"></i> Employment
+                                                                </td>
+                                                                <td class="tableData">N/A</td> <!-- TB Details -->
+                                                                <td class="tableData" *ngFor="let key of getRelevantKeys(doc)">
+                                                                    {{ doc[key] || 'N/A' }}
+                                                                </td>
+                                                            </tr>
+                                                            <!-- Matching Percentage Row -->
+                                                            <tr class="matching-percentage-row">
+                                                                <th class="tableData">Matching %</th>
+                                                                <td class="tableData"></td> <!-- Empty cell for TB Details alignment -->
+                                                                <td class="tableData" *ngFor="let key of getRelevantKeys(doc)">
+                                                                    <ng-container *ngIf="isFieldForComparison(key, doc.originalCategory)">
+                                                                        {{ findSimilarity(getBGVValueForField(doc, key), doc[key]) }}
+                                                                    </ng-container>
+                                                                    <ng-container *ngIf="!isFieldForComparison(key, doc.originalCategory)">
+                                                                        &nbsp;
+                                                                    </ng-container>
+                                                                </td>
+                                                            </tr>
+                                                        </ng-container>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </ng-container>
+
+                                        <!-- Previous Employment Details Table -->
+                                        <ng-container *ngIf="previousEmploymentDocs && previousEmploymentDocs.length > 0">
+                                            <h3 class="sub-table-header">Previous Employment Details</h3>
+                                            <div class="tableScrollOnly">
+                                                <table class="table table-striped table-bordered nowrap data-table">
+                                                    <thead class="table-design">
+                                                        <tr>
+                                                            <th></th> <!-- For BGV/Document/Matching % labels + icons -->
+                                                            <th>TB Details</th>
+                                                            <th *ngFor="let key of getRelevantKeys(previousEmploymentDocs[0])">
+                                                                {{ formatKey(key) }}
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <ng-container *ngFor="let doc of previousEmploymentDocs">
+                                                            <!-- BGV Data Row -->
+                                                            <tr>
+                                                                <td class="tableData tablecellbold">
+                                                                    <i class="fa fa-check-circle text-green-500 mr-2"></i> BGV
+                                                                </td>
+                                                                <td class="tableData">N/A</td> <!-- TB Details -->
+                                                                <td class="tableData" *ngFor="let key of getRelevantKeys(doc)">
+                                                                    {{ getBGVValueForField(doc, key) }}
+                                                                </td>
+                                                            </tr>
+                                                            <!-- Document Data Row -->
+                                                            <tr>
+                                                                <td class="tableData tablecellbold">
+                                                                    <i class="fa fa-file-alt text-blue-500 mr-2"></i> Employment
+                                                                </td>
+                                                                <td class="tableData">N/A</td> <!-- TB Details -->
+                                                                <td class="tableData" *ngFor="let key of getRelevantKeys(doc)">
+                                                                    {{ doc[key] || 'N/A' }}
+                                                                </td>
+                                                            </tr>
+                                                            <!-- Matching Percentage Row -->
+                                                            <tr class="matching-percentage-row">
+                                                                <th class="tableData">Matching %</th>
+                                                                <td class="tableData"></td> <!-- Empty cell for TB Details alignment -->
+                                                                <td class="tableData" *ngFor="let key of getRelevantKeys(doc)">
+                                                                    <ng-container *ngIf="isFieldForComparison(key, doc.originalCategory)">
+                                                                        {{ findSimilarity(getBGVValueForField(doc, key), doc[key]) }}
+                                                                    </ng-container>
+                                                                    <ng-container *ngIf="!isFieldForComparison(key, doc.originalCategory)">
+                                                                        &nbsp;
+                                                                    </ng-container>
+                                                                </td>
+                                                            </tr>
+                                                        </ng-container>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </ng-container>
+                                    </ng-container>
+
+                                    <!-- General Tab Content (separated tables per document) -->
+                                    <ng-container *ngIf="tabName !== 'Employment'">
+                                        <h4 class="document-title">{{ tabName }} Documents</h4>
+                                        <div *ngIf="documentTableData.length === 0">
+                                            <p class="no-data">No documents found for {{ tabName }}</p>
+                                        </div>
+                                        <ng-container *ngIf="documentTableData.length > 0">
+                                            <ng-container *ngFor="let doc of documentTableData">
+                                                <div class="tableScrollOnly">
+                                                    <table class="table table-striped table-bordered nowrap data-table mb-4">
+                                                        <thead class="table-design">
+                                                            <tr>
+                                                                <th></th> <!-- For BGV/Document/Matching % labels + icons -->
+                                                                <th>TB Details</th>
+                                                                <th *ngFor="let key of getRelevantKeys(doc)">
+                                                                    {{ formatKey(key) }}
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <!-- BGV Data Row -->
+                                                            <tr>
+                                                                <td class="tableData tablecellbold">
+                                                                    <i class="fa fa-check-circle text-green-500 mr-2"></i> BGV
+                                                                </td>
+                                                                <td class="tableData">N/A</td> <!-- TB Details -->
+                                                                <td class="tableData" *ngFor="let key of getRelevantKeys(doc)">
+                                                                    {{ getBGVValueForField(doc, key) }}
+                                                                </td>
+                                                            </tr>
+                                                            <!-- Document Data Row -->
+                                                            <tr>
+                                                                <td class="tableData tablecellbold">
+                                                                    <i class="fa fa-file-alt text-blue-500 mr-2"></i> {{ formatKey(doc.originalCategory) }}
+                                                                </td>
+                                                                <td class="tableData">N/A</td> <!-- TB Details -->
+                                                                <td class="tableData" *ngFor="let key of getRelevantKeys(doc)">
+                                                                    {{ doc[key] || 'N/A' }}
+                                                                </td>
+                                                            </tr>
+                                                            <!-- Matching Percentage Row -->
+                                                            <tr class="matching-percentage-row">
+                                                                <th class="tableData">Matching %</th>
+                                                                <td class="tableData"></td> <!-- Empty cell for TB Details alignment -->
+                                                                <td class="tableData" *ngFor="let key of getRelevantKeys(doc)">
+                                                                    <ng-container *ngIf="isFieldForComparison(key, doc.originalCategory)">
+                                                                        {{ findSimilarity(getBGVValueForField(doc, key), doc[key]) }}
+                                                                    </ng-container>
+                                                                    <ng-container *ngIf="!isFieldForComparison(key, doc.originalCategory)">
+                                                                        &nbsp;
+                                                                    </ng-container>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </ng-container>
+                                        </ng-container>
+                                    </ng-container>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <ng-template #DocumentView>
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">Document View</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="height: 85vh;">
+                <img *ngIf="isImage" id="imgc" class="imgsize" [src]="documentURL" (error)="onErrorMsg()" alt="Document Preview">
+                <iframe *ngIf="!isImage && srcFrame" id="iframe" [src]="srcFrame" class="imgsize" frameborder="0" (error)="onErrorMsg()"></iframe>
+                <div *ngIf="showErrorMsg" class="alignError">
+                    Preview Not Available
+                </div>
+            </div>
+        </ng-template>
+ `,
   styleUrls: ['./comparison-document.component.scss'],
 })
 export class ComparisonDocumentComponent implements OnInit, AfterViewInit {
@@ -328,36 +611,36 @@ export class ComparisonDocumentComponent implements OnInit, AfterViewInit {
         },
         {
           "Employment": [
-            {
-              "_id": "6839afdd1c46e228987cd958",
-              "company_name": "Arete Brains Pvt Ltd",
-              "company_address": "Office no 205, gran exito, above axis bank, b.t. kawade rord, ghorpadi, pune-411001. Registered Office : House no 205, shewalewadi, datta chowk, near grampanchayat office, hadapsar pune-412307.",
-              "employee_id": "ARETE001",
-              "designation": "Software Engineer",
-              "ctc": "700000",
-              "from_date": "2022-05-01",
-              "to_date": "2023-11-30",
-              "reson_for_leaving": "Shivam's decision to leave Arete brains Pvt Ltd. ",
-              "referenceNumber": "File3e9f96db286e44137985c42aaadd8b99",
-              "filePath": "/home/anil/env-user/acheck-files/File3e9f96db286e44137985c42aaadd8b99_aiqod.com3_Service_shivam.shewale.experience.letter.pdf",
-              "documentStatus": "DataEntry_Complete",
-              "imageFilePath": "/home/anil/env-user/acheck-files/File3e9f96db286e44137985c42aaadd8b99_aiqod_com3_Service_shivam_shewale_experience_letter-1.jpg"
-            },
-            {
-              "_id": "6839afdd1c46e228987cd958",
-              "company_name": "New Tech Corp",
-              "company_address": "456 Innovation Drive, Tech City",
-              "employee_id": "NTC005",
-              "designation": "Senior Software Engineer",
-              "ctc": "900000",
-              "from_date": "2024-01-15",
-              "to_date": "Present",
-              "reson_for_leaving": "N/A",
-              "referenceNumber": "File3e9f96db286e44137985c42aaadd8b99_2",
-              "filePath": "/home/anil/env-user/acheck-files/File3e9f96db286e44137985c42aaadd8b99_aiqod.com3_Service_shivam.shewale.experience.letter.pdf",
-              "documentStatus": "Approved",
-              "imageFilePath": "/home/anil/env-user/acheck-files/File3e9f96db286e44137985c42aaadd8b99_aiqod_com3_Service_shivam_shewale_experience_letter-1.jpg"
-            }
+            // {
+            //   "_id": "6839afdd1c46e228987cd958",
+            //   "company_name": "Arete Brains Pvt Ltd",
+            //   "company_address": "Office no 205, gran exito, above axis bank, b.t. kawade rord, ghorpadi, pune-411001. Registered Office : House no 205, shewalewadi, datta chowk, near grampanchayat office, hadpsar pune-412307.",
+            //   "employee_id": "ARETE001",
+            //   "designation": "Software Engineer",
+            //   "ctc": "700000",
+            //   "from_date": "2022-05-01",
+            //   "to_date": "2023-11-30",
+            //   "reson_for_leaving": "Shivam's decision to leave Arete brains Pvt Ltd. ",
+            //   "referenceNumber": "File3e9f96db286e44137985c42aaadd8b99",
+            //   "filePath": "/home/anil/env-user/acheck-files/File3e9f96db286e44137985c42aaadd8b99_aiqod.com3_Service_shivam.shewale.experience.letter.pdf",
+            //   "documentStatus": "DataEntry_Complete",
+            //   "imageFilePath": "/home/anil/env-user/acheck-files/File3e9f96db286e44137985c42aaadd8b99_aiqod_com3_Service_shivam_shewale_experience_letter-1.jpg"
+            // },
+            // {
+            //   "_id": "6839afdd1c46e228987cd958",
+            //   "company_name": "New Tech Corp",
+            //   "company_address": "456 Innovation Drive, Tech City",
+            //   "employee_id": "NTC005",
+            //   "designation": "Senior Software Engineer",
+            //   "ctc": "900000",
+            //   "from_date": "2024-01-15",
+            //   "to_date": "Present",
+            //   "reson_for_leaving": "N/A",
+            //   "referenceNumber": "File3e9f96db286e44137985c42aaadd8b99_2",
+            //   "filePath": "/home/anil/env-user/acheck-files/File3e9f96db286e44137985c42aaadd8b99_aiqod.com3_Service_shivam.shewale.experience.letter.pdf",
+            //   "documentStatus": "Approved",
+            //   "imageFilePath": "/home/anil/env-user/acheck-files/File3e9f96db286e44137985c42aaadd8b99_aiqod_com3_Service_shivam_shewale_experience_letter-1.jpg"
+            // }
           ]
         },
         {
